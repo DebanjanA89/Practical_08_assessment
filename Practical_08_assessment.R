@@ -1,3 +1,4 @@
+#Exercise 8.1
 #Installing and loading required packages
 install.packages("BiocManager")
 library(BiocManager)
@@ -10,6 +11,7 @@ library(biomaRt)
 library(pheatmap)
 library(tidyverse)
 
+#Exercise 8.2
 sample_table = read_csv('https://raw.githubusercontent.com/sjcockell/mmb8052/main/practicals/practical_08/data/sample_table.csv')
 files = pull(sample_table, Run)
 files = paste0('counts/', files, '/quant.sf')
@@ -27,7 +29,8 @@ txi = tximport(files,
                type='salmon',
                tx2gene=gene_map,
                ignoreTxVersion=TRUE)
-gene_map = read_csv('https://github.com/sjcockell/mmb8052/raw/main/practicals/practical_08/extdata/gene_map.csv')
+
+#Exercise 8.3
 dds = DESeqDataSetFromTximport(txi, colData = sample_table, design = ~ Group)
 dds = estimateSizeFactors(dds)
 dds = estimateDispersions(dds)
@@ -35,6 +38,7 @@ dds = estimateDispersions(dds)
 dds = nbinomWaldTest(dds)
 plotDispEsts(dds)
 
+#Exercise 8.4
 #PCA plot and heatmap
 rld = rlog(dds)
 plotPCA(rld, intgroup='Group')
@@ -59,7 +63,7 @@ pheatmap(sample_distance_matrix,
          color = Purples,
          annotation_colors = list ( 'group' = c(Allo24h ="#FF9999", Allo2h = "#00CC66", Naive = "#66B2FF")))
 
-
+#Exercise 8.5
 results_table = results(dds, contrast= c('Group', 'Allo24h', 'Naive'))
 summary(results_table)
 library(dplyr)
@@ -84,6 +88,7 @@ ggplot(filtered_results1, aes(x=log2FoldChange, y=logPVal)) +
   +   geom_vline(xintercept= -1) +
   +   geom_hline(yintercept= -log10(0.05), linetype=2, colour="dodgerblue")
 
+#Exercise 8.6
 ensembl108 = useEnsembl(biomart="ensembl", version=108)
 library(biomaRt)
 ensembl108 = useEnsembl(biomart="ensembl", version=108)
